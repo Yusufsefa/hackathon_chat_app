@@ -17,7 +17,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun initTabs() {
         val adapter = HomeFragmentStateAdapter(requireActivity())
-        //adapter.addFragment(UsersFragment(), "Chats")
+        // adapter.addFragment(UsersFragment(), "Chats")
         adapter.addFragment(UsersFragment(), "Users")
         binding.viewPager.adapter = adapter
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
@@ -25,4 +25,3 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }.attach()
     }
 }
-
