@@ -31,6 +31,10 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
             )
         }
 
+        binding.btnLogin.setOnClickListener {
+            findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
+        }
+
         viewModel.isRegister.observe(viewLifecycleOwner, {
             if (it){
                 Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
