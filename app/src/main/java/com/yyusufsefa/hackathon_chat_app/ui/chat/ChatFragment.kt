@@ -44,6 +44,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
         viewModel.fetchMessage(FirebaseAuth.getInstance().currentUser!!.uid, userId!!)
         viewModel.myMessageList.observe(viewLifecycleOwner) { messages ->
             sweetAdapter.submitList(messages)
+            binding.rvChat.smoothScrollToPosition(messages.size - 1)
         }
     }
 
