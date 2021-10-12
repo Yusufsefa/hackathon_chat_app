@@ -25,6 +25,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
 
         userId = arguments?.getString("userId")!!
 
+        binding.txtUserName.text = arguments?.getString("userName")!!
+
         initRecyclerView()
         getMessages()
 
@@ -44,7 +46,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
         viewModel.fetchMessage(FirebaseAuth.getInstance().currentUser!!.uid, userId!!)
         viewModel.myMessageList.observe(viewLifecycleOwner) { messages ->
             sweetAdapter.submitList(messages)
-            binding.rvChat.smoothScrollToPosition(messages.size - 1)
+            if (messages.isNotEmpty())
+                binding.rvChat.smoothScrollToPosition(messages.size - 1)
         }
     }
 

@@ -40,6 +40,7 @@ class UsersFragment : BaseFragment<FragmentUsersBinding>(R.layout.fragment_users
         }
         sweetAdapter.setOnItemClickListener { v, item ->
             val bundle = bundleOf("userId" to item.userId)
+            bundle.putString("userName", item.name)
             findNavController().navigate(R.id.action_homeFragment_to_chatFragment, bundle)
         }
         binding.recyclerView.adapter = sweetAdapter
