@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.yyusufsefa.hackathon_chat_app.ui.auth.signUp.SignUpFragment"
-        android:label="SignUpFragment" >
+        android:label="SignUpFragment">
         <action
             android:id="@+id/action_signUpFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
@@ -26,5 +26,17 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.yyusufsefa.hackathon_chat_app.ui.main.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="HomeFragment">
+        <action
+            android:id="@+id/action_homeFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.yyusufsefa.hackathon_chat_app.ui.chat.ChatFragment"
+        android:label="ChatFragment" />
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="com.yyusufsefa.hackathon_chat_app.ui.main.users.UsersFragment"
+        android:label="UsersFragment" />
 </navigation>

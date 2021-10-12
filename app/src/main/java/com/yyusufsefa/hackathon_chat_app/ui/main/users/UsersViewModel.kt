@@ -25,9 +25,9 @@ class UsersViewModel : ViewModel() {
             dbRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val userList = mutableListOf<User>()
-                    for (item in snapshot.children){
+                    for (item in snapshot.children) {
                         val user = item.getValue<User>()
-                        if (user != null && user?.userId != FirebaseAuth.getInstance().currentUser?.uid)
+                        if (user != null && user.userId != FirebaseAuth.getInstance().currentUser?.uid)
                             userList.add(user)
                     }
                     _userList.value = userList.toList()
@@ -37,5 +37,4 @@ class UsersViewModel : ViewModel() {
             })
         }
     }
-
 }
