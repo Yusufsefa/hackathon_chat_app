@@ -18,8 +18,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(FirebaseAuth.getInstance().currentUser != null){
-            //findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
         }
 
         binding.btnRegister.setOnClickListener {
@@ -38,7 +38,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun trackLogin() {
         viewModel.isLogin.observe(viewLifecycleOwner) { isLogin ->
-            if (isLogin){
+            if (isLogin) {
                 findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
             } else {
                 Toast.makeText(requireActivity(), "Fail", Toast.LENGTH_SHORT).show()
