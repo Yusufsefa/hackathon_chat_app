@@ -1,8 +1,11 @@
 package com.yyusufsefa.hackathon_chat_app.ui.chat
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.ramo.sweetrecycleradapter.SweetRecyclerAdapter
@@ -20,6 +23,11 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
     private val sweetAdapter = SweetRecyclerAdapter<ChatMessage>()
     private var userId: String? = null
 
+    private val mLocalFilePath by lazy {
+        requireContext().externalCacheDir?.absolutePath + "/audiorecordtest.3gp"
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -29,6 +37,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
 
         initRecyclerView()
         getMessages()
+        traceMicIcon()
 
         binding.btnSend.setOnClickListener {
             viewModel.sendMessage(
@@ -39,6 +48,29 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
                 )
             )
             binding.txtChat.text?.clear()
+        }
+
+        binding.btnVoice.setOnTouchListener { _, motionEvent ->
+            when (motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    viewModel.startRecording(mLocalFilePath)
+                    true
+                }
+                MotionEvent.ACTION_UP -> {
+                    viewModel.stopRecording(mLocalFilePath)
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun traceMicIcon() {
+        viewModel.isRecording.observe(viewLifecycleOwner) {
+
+            val iconId = if (it) R.drawable.ic_mic_off else R.drawable.ic_mic
+
+            binding.btnVoice.icon = ContextCompat.getDrawable(requireActivity(), iconId)
         }
     }
 

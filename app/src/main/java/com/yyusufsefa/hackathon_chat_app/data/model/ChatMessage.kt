@@ -9,7 +9,9 @@ import com.yyusufsefa.hackathon_chat_app.R
 data class ChatMessage(
     var text: String? = "",
     var fromId: String? = "",
-    var toId: String? = ""
+    var toId: String? = "",
+    var isVoice: Boolean? = false,
+    var voicePath: String? = ""
 ) : ViewTypeListener {
 
     var userId: String? = null

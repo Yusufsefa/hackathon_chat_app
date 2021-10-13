@@ -54,16 +54,31 @@
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/txt_chat"
             android:layout_width="0dp"
-            android:background="@drawable/card_chat_view_left"
             android:layout_height="50dp"
             android:layout_marginStart="4dp"
             android:layout_marginBottom="16dp"
-            android:drawableRight="@drawable/ic_mic"
+            android:background="@drawable/card_chat_view_left"
             android:hint="Mesaj girin"
             android:paddingLeft="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_send"
+            app:layout_constraintEnd_toStartOf="@id/btn_voice"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_voice"
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginBottom="16dp"
+            app:cornerRadius="28dp"
+            app:icon="@drawable/ic_mic"
+            app:iconGravity="textEnd"
+            app:iconPadding="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/txt_chat"
+            app:layout_constraintRight_toLeftOf="@id/btn_send"
+            app:layout_constraintTop_toTopOf="@id/btn_send" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_send"

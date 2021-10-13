@@ -1,21 +1,34 @@
 package com.yyusufsefa.hackathon_chat_app.ui.chat
 
+import android.media.MediaRecorder
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.yyusufsefa.hackathon_chat_app.data.model.ChatMessage
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.IOException
 
 class ChatViewModel : ViewModel() {
 
     private val _messageList: MutableLiveData<List<ChatMessage>> = MutableLiveData()
     val myMessageList: LiveData<List<ChatMessage>> get() = _messageList
+
+    private val _isRecording: MutableLiveData<Boolean> = MutableLiveData()
+    val isRecording: LiveData<Boolean> get() = _isRecording
+
+    private var mRecorder: MediaRecorder? = null
 
     fun fetchMessage(currentUid: String, userId: String) {
         viewModelScope.launch {
@@ -48,5 +61,42 @@ class ChatViewModel : ViewModel() {
             val reference = Firebase.database.getReference("/messages")
             reference.push().setValue(chatMessage)
         }
+    }
+
+    fun startRecording(mLocalFilePath: String) {
+        mRecorder = MediaRecorder()
+        mRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
+        mRecorder?.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+        mRecorder?.setOutputFile(mLocalFilePath)
+        mRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+        try {
+            mRecorder?.prepare()
+        } catch (e: IOException) {
+        }
+        mRecorder?.start()
+        _isRecording.value = true
+    }
+
+    fun stopRecording(mLocalFilePath: String) {
+        mRecorder?.stop()
+        mRecorder?.release()
+        uploadAudio(mLocalFilePath)
+        mRecorder = null
+        _isRecording.value = false
+    }
+
+    private fun uploadAudio(mLocalFilePath: String) {
+
+        val mFirebaseStorage = FirebaseStorage.getInstance().reference
+        val firebasePath: StorageReference =
+            mFirebaseStorage.child("VoiceMessages").child("Audio").child("new_audio.3gp")
+        val localUri: Uri = Uri.fromFile(File(mLocalFilePath))
+        firebasePath.putFile(localUri).addOnSuccessListener(
+            OnSuccessListener<Any?> {
+            }
+        ).addOnFailureListener(
+            OnFailureListener { e ->
+            }
+        )
     }
 }
