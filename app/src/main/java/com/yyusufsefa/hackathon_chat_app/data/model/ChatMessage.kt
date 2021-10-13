@@ -18,8 +18,8 @@ data class ChatMessage(
 
     override fun getRecyclerItemLayoutId(): Int {
         return if (fromId == FirebaseAuth.getInstance().currentUser?.uid)
-            R.layout.item_chat_right
+            if (isVoice!!) R.layout.item_voice_right else R.layout.item_chat_right
         else
-            R.layout.item_chat_left
+            if (isVoice!!) R.layout.item_voice_left else R.layout.item_chat_left
     }
 }

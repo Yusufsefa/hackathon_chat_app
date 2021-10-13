@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -77,19 +78,29 @@ class ChatViewModel : ViewModel() {
         _isRecording.value = true
     }
 
-    fun stopRecording(mLocalFilePath: String) {
+    fun stopRecording() {
         mRecorder?.stop()
         mRecorder?.release()
-        uploadAudio(mLocalFilePath)
         mRecorder = null
         _isRecording.value = false
     }
 
-    private fun uploadAudio(mLocalFilePath: String) {
+    fun saveVoiceMessage(mLocalFilePath: String, firebaseFileName: String, receiverUserId: String) {
+        uploadAudio(mLocalFilePath, firebaseFileName)
+        sendMessage(
+            ChatMessage(
+                fromId = FirebaseAuth.getInstance().currentUser!!.uid,
+                toId = receiverUserId,
+                isVoice = true,
+                voicePath = firebaseFileName
+            )
+        )
+    }
 
+    private fun uploadAudio(mLocalFilePath: String, firebaseFileName: String) {
         val mFirebaseStorage = FirebaseStorage.getInstance().reference
         val firebasePath: StorageReference =
-            mFirebaseStorage.child("VoiceMessages").child("Audio").child("new_audio.3gp")
+            mFirebaseStorage.child("VoiceMessages").child("Audio").child(firebaseFileName)
         val localUri: Uri = Uri.fromFile(File(mLocalFilePath))
         firebasePath.putFile(localUri).addOnSuccessListener(
             OnSuccessListener<Any?> {
