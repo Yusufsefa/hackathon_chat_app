@@ -1,8 +1,12 @@
 package com.yyusufsefa.hackathon_chat_app.ui.chat
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
@@ -12,12 +16,20 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.ramo.sweetrecycleradapter.SweetRecyclerAdapter
+import com.yyusufsefa.hackathon_chat_app.BuildConfig
 import com.yyusufsefa.hackathon_chat_app.R
 import com.yyusufsefa.hackathon_chat_app.common.BaseFragment
 import com.yyusufsefa.hackathon_chat_app.data.model.ChatMessage
 import com.yyusufsefa.hackathon_chat_app.databinding.FragmentChatBinding
+import com.yyusufsefa.hackathon_chat_app.util.showInfoDialog
 import java.util.*
+
 
 class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
 
@@ -56,23 +68,64 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
         }
 
         binding.btnVoice.setOnTouchListener { _, motionEvent ->
-            when (motionEvent.action) {
+            return@setOnTouchListener when (motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    viewModel.startRecording(mLocalFilePath)
+                    checkPermissionAndDo {
+                        viewModel.startRecording(mLocalFilePath)
+                    }
                     true
                 }
                 MotionEvent.ACTION_UP -> {
-                    viewModel.stopRecording()
-                    viewModel.saveVoiceMessage(
-                        mLocalFilePath,
-                        firebaseFileName = UUID.randomUUID().toString() + ".3gp",
-                        userId!!
-                    )
+                    checkPermissionAndDo {
+                        viewModel.stopRecording()
+                        viewModel.saveVoiceMessage(
+                            mLocalFilePath,
+                            firebaseFileName = UUID.randomUUID().toString() + ".3gp",
+                            userId!!
+                        )
+                    }
                     true
                 }
                 else -> false
             }
+
         }
+    }
+
+    private fun checkPermissionAndDo(function: () -> Unit) {
+        Dexter.withContext(requireActivity())
+            .withPermissions(
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ).withListener(object : MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                    if (report != null && report.areAllPermissionsGranted()) {
+                        function()
+                    } else if (report?.isAnyPermissionPermanentlyDenied) {
+                        showInfoDialog(
+                            requireContext(),
+                            "You have to give write permission to Audio recording and Files. So the settings will open"
+                        ) {
+                            val intent = Intent()
+                            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            val uri = Uri.fromParts(
+                                "package",
+                                BuildConfig.APPLICATION_ID, null
+                            )
+                            intent.data = uri
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                        }
+                    }
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: List<PermissionRequest?>?,
+                    token: PermissionToken?
+                ) {
+                    token?.continuePermissionRequest()
+                }
+            }).check()
     }
 
     private fun traceMicIcon() {

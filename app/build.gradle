@@ -59,5 +59,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-database-ktx'
 
     implementation 'com.github.ramazanogunc:Android-Sweet-Recycler-Adapter:2.0.2'
+    implementation 'com.karumi:dexter:6.2.3'
 
 }
