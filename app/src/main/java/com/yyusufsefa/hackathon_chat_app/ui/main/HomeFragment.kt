@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.yyusufsefa.hackathon_chat_app.R
 import com.yyusufsefa.hackathon_chat_app.common.BaseFragment
 import com.yyusufsefa.hackathon_chat_app.databinding.FragmentHomeBinding
+import com.yyusufsefa.hackathon_chat_app.ui.chat.ChatListFragment
 import com.yyusufsefa.hackathon_chat_app.ui.main.users.UsersFragment
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
@@ -24,7 +25,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun initTabs() {
         val adapter = HomeFragmentStateAdapter(requireActivity())
-        // adapter.addFragment(UsersFragment(), "Chats")
+        adapter.addFragment(ChatListFragment(), "Chats")
         adapter.addFragment(UsersFragment(), "Users")
         binding.viewPager.adapter = adapter
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
