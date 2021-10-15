@@ -73,6 +73,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
                     checkPermissionAndDo {
                         viewModel.startRecording(mLocalFilePath)
                     }
+                    binding.btnVoice.setBackgroundColor( ContextCompat.getColor(requireActivity(), R.color.red))
                     true
                 }
                 MotionEvent.ACTION_UP -> {
@@ -84,6 +85,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
                             userId!!
                         )
                     }
+                    binding.btnVoice.setBackgroundColor( ContextCompat.getColor(requireActivity(), R.color.teal_200))
                     true
                 }
                 else -> false
