@@ -1,39 +1,16 @@
 package com.yyusufsefa.hackathon_chat_app.ui.chat
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
-import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.button.MaterialButton
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.ramo.sweetrecycleradapter.SweetRecyclerAdapter
-import com.yyusufsefa.hackathon_chat_app.BuildConfig
 import com.yyusufsefa.hackathon_chat_app.R
 import com.yyusufsefa.hackathon_chat_app.common.BaseFragment
-import com.yyusufsefa.hackathon_chat_app.data.model.ChatMessage
 import com.yyusufsefa.hackathon_chat_app.data.model.User
-import com.yyusufsefa.hackathon_chat_app.databinding.FragmentChatBinding
 import com.yyusufsefa.hackathon_chat_app.databinding.FragmentChatListBinding
-import com.yyusufsefa.hackathon_chat_app.ui.main.users.UsersViewModel
-import com.yyusufsefa.hackathon_chat_app.util.showInfoDialog
-import java.util.*
 
 
 class ChatListFragment : BaseFragment<FragmentChatListBinding>(R.layout.fragment_chat_list) {
@@ -54,11 +31,10 @@ class ChatListFragment : BaseFragment<FragmentChatListBinding>(R.layout.fragment
     private fun getChatList() {
         viewModel.fetchChatList()
         viewModel.userList.observe(viewLifecycleOwner) { userList ->
-            if (userList.isEmpty()){
+            if (userList.isEmpty()) {
                 binding.txtNoChat.visibility = View.VISIBLE
                 binding.recyclerView.visibility = View.GONE
-            }
-            else{
+            } else {
                 binding.txtNoChat.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
                 sweetAdapter.submitList(userList)

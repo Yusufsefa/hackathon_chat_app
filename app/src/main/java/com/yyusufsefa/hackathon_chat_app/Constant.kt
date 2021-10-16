@@ -1,0 +1,5 @@
+package com.yyusufsefa.hackathon_chat_app
+
+object Constant {
+    const val SERVER_KEY = "AAAAqVnnrNg:APA91bEsx7lW1g5bSzsGo4Ec_ocuxYHK9JfIHTy7BDknlzubNHljYBKbUyPaftOUNSsg5On4XA9TenL5xeMiSTl3_kSznARd5x204seVbnle86MyDIomgf2_s2XJFVcgzP1ZO4HCBI3Z"
+}

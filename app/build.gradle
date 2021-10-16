@@ -41,9 +41,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
-    implementation 'com.google.firebase:firebase-auth:19.3.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.firebase:firebase-storage-ktx:20.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
@@ -54,11 +52,23 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:28.4.2')
 
+    implementation 'com.google.firebase:firebase-auth:19.3.0'
+    implementation 'com.google.firebase:firebase-database-ktx'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.0.0'
+
+    // Notification Receive
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    // Notification send
+    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
-    implementation 'com.google.firebase:firebase-database-ktx'
 
+    // Recyclerview adapters
     implementation 'com.github.ramazanogunc:Android-Sweet-Recycler-Adapter:2.0.2'
+    // Permission
     implementation 'com.karumi:dexter:6.2.3'
 
 }

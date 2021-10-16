@@ -20,6 +20,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         binding.btnLogOut.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
+            // TODO remove device token from firebase.
         }
     }
 
