@@ -30,7 +30,6 @@ import com.yyusufsefa.hackathon_chat_app.databinding.FragmentChatBinding
 import com.yyusufsefa.hackathon_chat_app.util.showInfoDialog
 import java.util.*
 
-
 class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
 
     private val viewModel: ChatViewModel by lazy {
@@ -39,6 +38,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
 
     private val sweetAdapter = SweetRecyclerAdapter<ChatMessage>()
     private var userId: String? = null
+    private var notification_to_user_id: String? = null
+    private var notification_name: String? = null
 
     private val mLocalFilePath by lazy {
         requireContext().externalCacheDir?.absolutePath + "/audiorecordtest.3gp"
@@ -48,9 +49,15 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userId = arguments?.getString("userId")!!
+        notification_to_user_id = arguments?.getString("notification_to_id")
+        notification_name = arguments?.getString("notification_name")
 
-        binding.txtUserName.text = arguments?.getString("userName")!!
+        if (notification_to_user_id.isNullOrEmpty() && notification_name.isNullOrEmpty()) {
+            userId = arguments?.getString("userId")!!
+            binding.txtUserName.text = arguments?.getString("userName")!!
+        } else {
+            binding.txtUserName.text = notification_name.toString()
+        }
 
         initRecyclerView()
         getMessages()
@@ -73,7 +80,12 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
                     checkPermissionAndDo {
                         viewModel.startRecording(mLocalFilePath)
                     }
-                    binding.btnVoice.setBackgroundColor( ContextCompat.getColor(requireActivity(), R.color.red))
+                    binding.btnVoice.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.red
+                        )
+                    )
                     true
                 }
                 MotionEvent.ACTION_UP -> {
@@ -85,12 +97,16 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
                             userId!!
                         )
                     }
-                    binding.btnVoice.setBackgroundColor( ContextCompat.getColor(requireActivity(), R.color.teal_200))
+                    binding.btnVoice.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.teal_200
+                        )
+                    )
                     true
                 }
                 else -> false
             }
-
         }
     }
 
@@ -103,7 +119,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                     if (report != null && report.areAllPermissionsGranted()) {
                         function()
-                    } else if (report?.isAnyPermissionPermanentlyDenied) {
+                    } else if (report.isAnyPermissionPermanentlyDenied) {
                         showInfoDialog(
                             requireContext(),
                             "You have to give write permission to Audio recording and Files. So the settings will open"
@@ -138,7 +154,14 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
     }
 
     private fun getMessages() {
-        viewModel.fetchMessage(FirebaseAuth.getInstance().currentUser!!.uid, userId!!)
+        if (!notification_to_user_id.isNullOrEmpty()) {
+            viewModel.fetchMessage(
+                FirebaseAuth.getInstance().currentUser!!.uid,
+                notification_to_user_id!!
+            )
+        } else {
+            viewModel.fetchMessage(FirebaseAuth.getInstance().currentUser!!.uid, userId!!)
+        }
         viewModel.myMessageList.observe(viewLifecycleOwner) { messages ->
             sweetAdapter.submitList(messages)
             if (messages.isNotEmpty())
