@@ -49,7 +49,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 if (snapshot.exists()) {
                     val user = snapshot.getValue(User::class.java)
                     if (user != null) {
-                        val username = user.name + user.lastName
+                        val username = "${user.name} ${user.lastName}"
                         val message =
                             if (chatMessage.isVoice!!) "Voice Message" else chatMessage.text
                         showNotification("New Message", "$username: $message")
