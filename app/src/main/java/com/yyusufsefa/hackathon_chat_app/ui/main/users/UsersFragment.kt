@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.os.bundleOf
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.ramo.sweetrecycleradapter.SweetRecyclerAdapter
@@ -23,13 +24,27 @@ class UsersFragment : BaseFragment<FragmentUsersBinding>(R.layout.fragment_users
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
+        initSearch()
         getUsers()
+    }
+
+    private fun initSearch() {
+        binding.etSearch.addTextChangedListener { text ->
+            viewModel.searchUserList(text.toString())
+        }
     }
 
     private fun getUsers() {
         viewModel.fetchUserList()
         viewModel.userList.observe(viewLifecycleOwner) { userList ->
-            sweetAdapter.submitList(userList)
+            if (userList.isEmpty()) {
+                binding.txtNoUser.visibility = View.VISIBLE
+                binding.recyclerView.visibility = View.GONE
+            } else {
+                binding.txtNoUser.visibility = View.GONE
+                binding.recyclerView.visibility = View.VISIBLE
+                sweetAdapter.submitList(userList)
+            }
         }
     }
 

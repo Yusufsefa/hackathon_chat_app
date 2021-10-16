@@ -27,6 +27,5 @@
             android:textStyle="bold"
             android:textSize="18dp"
             android:visibility="gone"/>
-            android:visibility="gone"/>
     </FrameLayout>
 </layout>
