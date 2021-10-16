@@ -62,13 +62,26 @@ class ChatViewModel : ViewModel() {
             val reference = Firebase.database.getReference("/messages")
             reference.push().setValue(chatMessage)
 
-            val chatListReference =
+            val chatListFromReference =
                 Firebase.database.getReference("chat_list").child(chatMessage.fromId!!)
                     .child(chatMessage.toId!!)
-            chatListReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            chatListFromReference.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (!snapshot.exists())
-                        chatListReference.child("userId").setValue(chatMessage.toId)
+                        chatListFromReference.child("userId").setValue(chatMessage.toId)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+            })
+
+            val chatListToReference =
+                Firebase.database.getReference("chat_list").child(chatMessage.toId!!)
+                    .child(chatMessage.fromId!!)
+            chatListToReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (!snapshot.exists())
+                        chatListToReference.child("userId").setValue(chatMessage.fromId)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
