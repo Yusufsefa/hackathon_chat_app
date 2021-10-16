@@ -5,6 +5,8 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.yyusufsefa.hackathon_chat_app.R
 import com.yyusufsefa.hackathon_chat_app.common.BaseFragment
 import com.yyusufsefa.hackathon_chat_app.databinding.FragmentHomeBinding
@@ -18,10 +20,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         initTabs()
 
         binding.btnLogOut.setOnClickListener {
+            removeDeviceToken(FirebaseAuth.getInstance().currentUser!!.uid)
             FirebaseAuth.getInstance().signOut()
             findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
-            // TODO remove device token from firebase.
         }
+    }
+
+    private fun removeDeviceToken(currentUserId: String) {
+        Firebase.database.getReference("device_tokens").child(currentUserId).removeValue()
     }
 
     private fun initTabs() {

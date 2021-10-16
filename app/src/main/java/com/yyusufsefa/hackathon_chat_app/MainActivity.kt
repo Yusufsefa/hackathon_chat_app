@@ -12,24 +12,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setupFcmNotificaiton()
-
-    }
-
-    private fun setupFcmNotificaiton() {
         Firebase.messaging.isAutoInitEnabled = true
-        catchDeviceToken()
     }
 
-    private fun catchDeviceToken() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                return@OnCompleteListener
-            }
-            val token = task.result
-            if (token != null) {
-                saveCurrentUserDeviceToken(token)
-            }
-        })
-    }
 }

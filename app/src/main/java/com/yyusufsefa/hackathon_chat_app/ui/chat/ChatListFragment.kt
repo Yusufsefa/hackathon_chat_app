@@ -6,11 +6,14 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.ramo.sweetrecycleradapter.SweetRecyclerAdapter
 import com.yyusufsefa.hackathon_chat_app.R
 import com.yyusufsefa.hackathon_chat_app.common.BaseFragment
 import com.yyusufsefa.hackathon_chat_app.data.model.User
 import com.yyusufsefa.hackathon_chat_app.databinding.FragmentChatListBinding
+import com.yyusufsefa.hackathon_chat_app.util.saveCurrentUserDeviceToken
 
 
 class ChatListFragment : BaseFragment<FragmentChatListBinding>(R.layout.fragment_chat_list) {
@@ -26,6 +29,7 @@ class ChatListFragment : BaseFragment<FragmentChatListBinding>(R.layout.fragment
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         getChatList()
+        catchDeviceToken()
     }
 
     private fun getChatList() {
@@ -53,5 +57,17 @@ class ChatListFragment : BaseFragment<FragmentChatListBinding>(R.layout.fragment
             findNavController().navigate(R.id.action_homeFragment_to_chatFragment, bundle)
         }
         binding.recyclerView.adapter = sweetAdapter
+    }
+
+    private fun catchDeviceToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@OnCompleteListener
+            }
+            val token = task.result
+            if (token != null) {
+                saveCurrentUserDeviceToken(token)
+            }
+        })
     }
 }
