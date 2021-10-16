@@ -2,13 +2,13 @@ package com.yyusufsefa.hackathon_chat_app.notification
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.os.bundleOf
+import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -25,12 +25,16 @@ import com.yyusufsefa.hackathon_chat_app.util.saveCurrentUserDeviceToken
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
+    private var notification_to_Id: String? = null
+    private var notification_name: String? = null
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         val currentUser = FirebaseAuth.getInstance().currentUser
-        Log.e("onMessageReceived: ",remoteMessage.data.toString() )
+        Log.e("onMessageReceived: ", remoteMessage.data.toString())
         if (currentUser != null) {
             val remoteData = remoteMessage.data
+            notification_to_Id = remoteData["fromId"]
             val chatMessage = ChatMessage(
                 text = remoteData["text"],
                 fromId = remoteData["fromId"],
@@ -49,6 +53,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 if (snapshot.exists()) {
                     val user = snapshot.getValue(User::class.java)
                     if (user != null) {
+                        notification_name = user.name
                         val username = "${user.name} ${user.lastName}"
                         val message =
                             if (chatMessage.isVoice!!) "Voice Message" else chatMessage.text
@@ -56,6 +61,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     }
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {}
         })
     }
@@ -66,12 +72,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun showNotification(title: String, body: String) {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0, intent,
-            PendingIntent.FLAG_ONE_SHOT
-        )
+        val bundle = bundleOf("notification_to_id" to notification_to_Id)
+        bundle.putString("notification_name", notification_name)
+        val pendingIntent = NavDeepLinkBuilder(this)
+            .setComponentName(MainActivity::class.java)
+            .setGraph(R.navigation.nav_graph)
+            .setDestination(R.id.chatFragment)
+            .setArguments(bundle)
+            .createPendingIntent()
 
         val channelId = getString(R.string.app_name)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -98,5 +106,4 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         notificationManager.notify(1234, notificationBuilder.build())
     }
-
 }
