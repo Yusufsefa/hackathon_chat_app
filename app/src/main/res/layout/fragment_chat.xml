@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F2F3EE"
+        tools:context=".ui.chat.ChatFragment">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@id/rv_chat"
+            app:layout_constraintRight_toLeftOf="@id/img_user"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Yusuf" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_user"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/img"
+            app:layout_constraintBottom_toBottomOf="@id/txt_user_name"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txt_user_name" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_chat"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:background="#F2F3EE"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/txt_chat"
+            app:layout_constraintTop_toBottomOf="@id/txt_user_name"
+            tools:itemCount="4"
+            tools:listitem="@layout/item_chat_left" />
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/txt_chat"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/card_chat_view_left"
+            android:hint="Mesaj girin"
+            android:paddingLeft="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_send"
+            app:layout_constraintStart_toEndOf="@+id/btn_voice" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_voice"
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="16dp"
+            app:cornerRadius="28dp"
+            app:icon="@drawable/ic_mic"
+            app:iconGravity="textEnd"
+            app:iconPadding="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txt_chat" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_send"
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="16dp"
+            app:cornerRadius="28dp"
+            app:icon="@drawable/ic_send"
+            app:iconGravity="textEnd"
+            app:iconPadding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txt_chat" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

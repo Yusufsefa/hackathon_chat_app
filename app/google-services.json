@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "727357828312",
+    "project_id": "hackathon-chat-app-b7ebc",
+    "storage_bucket": "hackathon-chat-app-b7ebc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727357828312:android:dafe2f3c741660d2f37bad",
+        "android_client_info": {
+          "package_name": "com.yyusufsefa.hackathon_chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "727357828312-l7ls89gjupkutuo2uqrgao67tiai43uq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfsRlbTSx6GUIRsvdlO7pRl8WkjLvPcqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "727357828312-l7ls89gjupkutuo2uqrgao67tiai43uq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_chat_view_left"
+    android:layout_margin="4dp"
+    android:paddingHorizontal="12dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textStyle="bold"
+        android:text="Voice message:"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_play_pause"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="4dp"
+        app:cornerRadius="28dp"
+        android:shadowColor="@android:color/transparent"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="0"
+        app:icon="@drawable/ic_play"
+        app:iconGravity="textEnd"
+        app:iconPadding="2dp" />
+
+</LinearLayout>
