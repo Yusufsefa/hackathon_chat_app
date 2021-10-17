@@ -28,6 +28,7 @@ import com.yyusufsefa.hackathon_chat_app.common.BaseFragment
 import com.yyusufsefa.hackathon_chat_app.data.model.ChatMessage
 import com.yyusufsefa.hackathon_chat_app.databinding.FragmentChatBinding
 import com.yyusufsefa.hackathon_chat_app.util.showInfoDialog
+import com.yyusufsefa.hackathon_chat_app.util.validateAndDo
 import java.util.*
 
 class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
@@ -65,14 +66,17 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
         traceMicIcon()
 
         binding.btnSend.setOnClickListener {
-            viewModel.sendMessage(
-                ChatMessage(
-                    binding.txtChat.text.toString(),
-                    FirebaseAuth.getInstance().currentUser?.uid,
-                    userId
+            val message = binding.txtChat.text.toString()
+            if (!message.isNullOrEmpty()){
+                viewModel.sendMessage(
+                    ChatMessage(
+                        message,
+                        FirebaseAuth.getInstance().currentUser?.uid,
+                        userId
+                    )
                 )
-            )
-            binding.txtChat.text?.clear()
+                binding.txtChat.text?.clear()
+            }
         }
 
         binding.btnVoice.setOnTouchListener { _, motionEvent ->
