@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.yyusufsefa.hackathon_chat_app.R
 import com.yyusufsefa.hackathon_chat_app.common.BaseFragment
 import com.yyusufsefa.hackathon_chat_app.databinding.FragmentLoginBinding
+import com.yyusufsefa.hackathon_chat_app.util.validateAndDo
 
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
 
@@ -27,10 +28,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         }
 
         binding.btnLogin.setOnClickListener {
-            viewModel.login(
-                binding.txtEditEmail.text.toString(),
-                binding.txtEditPassword.text.toString()
-            )
+            validateAndDo(listOf(binding.txtEditEmail, binding.txtEditPassword)) {
+                viewModel.login(
+                    binding.txtEditEmail.text.toString(),
+                    binding.txtEditPassword.text.toString()
+                )
+            }
         }
 
         trackLogin()
