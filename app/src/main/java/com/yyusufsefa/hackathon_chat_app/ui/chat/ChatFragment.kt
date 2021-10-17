@@ -28,6 +28,7 @@ import com.yyusufsefa.hackathon_chat_app.common.BaseFragment
 import com.yyusufsefa.hackathon_chat_app.data.model.ChatMessage
 import com.yyusufsefa.hackathon_chat_app.databinding.FragmentChatBinding
 import com.yyusufsefa.hackathon_chat_app.util.showInfoDialog
+import com.yyusufsefa.hackathon_chat_app.util.validateAndDo
 import java.util.*
 
 class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
@@ -57,6 +58,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
             binding.txtUserName.text = arguments?.getString("userName")!!
         } else {
             binding.txtUserName.text = notification_name.toString()
+            userId = notification_to_user_id
         }
 
         initRecyclerView()
@@ -64,14 +66,17 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
         traceMicIcon()
 
         binding.btnSend.setOnClickListener {
-            viewModel.sendMessage(
-                ChatMessage(
-                    binding.txtChat.text.toString(),
-                    FirebaseAuth.getInstance().currentUser?.uid,
-                    userId
+            val message = binding.txtChat.text.toString()
+            if (!message.isNullOrEmpty()){
+                viewModel.sendMessage(
+                    ChatMessage(
+                        message,
+                        FirebaseAuth.getInstance().currentUser?.uid,
+                        userId
+                    )
                 )
-            )
-            binding.txtChat.text?.clear()
+                binding.txtChat.text?.clear()
+            }
         }
 
         binding.btnVoice.setOnTouchListener { _, motionEvent ->
@@ -154,14 +159,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
     }
 
     private fun getMessages() {
-        if (!notification_to_user_id.isNullOrEmpty()) {
-            viewModel.fetchMessage(
-                FirebaseAuth.getInstance().currentUser!!.uid,
-                notification_to_user_id!!
-            )
-        } else {
-            viewModel.fetchMessage(FirebaseAuth.getInstance().currentUser!!.uid, userId!!)
-        }
+        viewModel.fetchMessage(FirebaseAuth.getInstance().currentUser!!.uid, userId!!)
         viewModel.myMessageList.observe(viewLifecycleOwner) { messages ->
             sweetAdapter.submitList(messages)
             if (messages.isNotEmpty())

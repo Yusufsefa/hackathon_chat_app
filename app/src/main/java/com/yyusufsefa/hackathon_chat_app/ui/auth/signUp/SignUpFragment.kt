@@ -9,6 +9,7 @@ import com.yyusufsefa.hackathon_chat_app.R
 import com.yyusufsefa.hackathon_chat_app.common.BaseFragment
 import com.yyusufsefa.hackathon_chat_app.data.model.User
 import com.yyusufsefa.hackathon_chat_app.databinding.FragmentSignUpBinding
+import com.yyusufsefa.hackathon_chat_app.util.validateAndDo
 
 class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sign_up) {
 
@@ -20,15 +21,25 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnSave.setOnClickListener {
-            val user = User(
-                binding.txtRegisterEmail.text.toString(),
-                binding.txtRegisterName.text.toString(),
-                binding.txtRegisterLastname.text.toString()
-            )
-            viewModel.signUp(
-                user,
-                binding.txtRegisterPassword.text.toString()
-            )
+            validateAndDo(
+                listOf(
+                    binding.txtRegisterEmail,
+                    binding.txtRegisterName,
+                    binding.txtRegisterLastname,
+                    binding.txtRegisterPassword
+                )
+            ) {
+                val user = User(
+                    binding.txtRegisterEmail.text.toString(),
+                    binding.txtRegisterName.text.toString(),
+                    binding.txtRegisterLastname.text.toString()
+                )
+                viewModel.signUp(
+                    user,
+                    binding.txtRegisterPassword.text.toString()
+                )
+            }
+
         }
 
         binding.btnLogin.setOnClickListener {
@@ -36,7 +47,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
         }
 
         viewModel.isRegister.observe(viewLifecycleOwner, {
-            if (it){
+            if (it) {
                 Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
             } else {
