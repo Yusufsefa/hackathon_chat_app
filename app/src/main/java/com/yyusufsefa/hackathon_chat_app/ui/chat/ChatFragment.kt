@@ -57,6 +57,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
             binding.txtUserName.text = arguments?.getString("userName")!!
         } else {
             binding.txtUserName.text = notification_name.toString()
+            userId = notification_to_user_id
         }
 
         initRecyclerView()
@@ -154,14 +155,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(R.layout.fragment_chat) {
     }
 
     private fun getMessages() {
-        if (!notification_to_user_id.isNullOrEmpty()) {
-            viewModel.fetchMessage(
-                FirebaseAuth.getInstance().currentUser!!.uid,
-                notification_to_user_id!!
-            )
-        } else {
-            viewModel.fetchMessage(FirebaseAuth.getInstance().currentUser!!.uid, userId!!)
-        }
+        viewModel.fetchMessage(FirebaseAuth.getInstance().currentUser!!.uid, userId!!)
         viewModel.myMessageList.observe(viewLifecycleOwner) { messages ->
             sweetAdapter.submitList(messages)
             if (messages.isNotEmpty())
